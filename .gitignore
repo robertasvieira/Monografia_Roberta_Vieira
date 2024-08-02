@@ -1,0 +1,12 @@
+*.ini
+*.toc
+*.lot
+*.loq
+*.lol
+*.log
+*.lof
+*.aux
+*.synctex.gz
+1_pre_textuais/*.aux
+2_textuais/*.aux
+3_pos_textuais/*.aux
