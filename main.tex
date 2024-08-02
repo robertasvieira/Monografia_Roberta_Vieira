@@ -1,0 +1,404 @@
+%% abtex2-modelo-trabalho-academico.tex, v-1.9.6 laurocesar
+%% Copyright 2012-2016 by abnTeX2 group at http://www.abntex.net.br/ 
+%% This work consists of the files abntex2-modelo-trabalho-academico.tex,
+%% abntex2-modelo-include-comandos and abntex2-modelo-references.bib
+%%
+
+%% O abnTeX2, evolução do abnTeX (ABsurd Norms for TeX*), é uma suíte para LaTeX que atende os requisitos das normas da ABNT (Associação Brasileira de Normas Técnicas) para elaboração de documentos técnicos e científicos brasileiros, como artigos científicos, relatórios técnicos, trabalhos acadêmicos como teses, dissertações, projetos de pesquisa e outros documentos do gênero. A suíte abnTeX2 é composta por uma classe, por pacotes de citação e de formatação de estilos bibliográficos, por exemplos, modelos de documentos e por uma ampla documentação.
+%%
+
+\documentclass[
+	% -- opções da classe memoir --
+	12pt,				% tamanho da fonte
+	openright,			% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	oneside,			% para impressão em recto e verso. Oposto a oneside
+	a4paper,			% tamanho do papel. 
+	% -- opções da classe abntex2 --
+	%chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+	%section=TITLE,		% títulos de seções convertidos em letras maiúsculas
+	%subsection=TITLE,	% títulos de subseções convertidos em letras maiúsculas
+	%subsubsection=TITLE,% títulos de subsubseções convertidos em letras maiúsculas
+	% -- opções do pacote babel --
+	english,			% idioma adicional para hifenização
+	french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil				% o último idioma é o principal do documento
+	]{abntex2}
+
+% ---
+% Pacotes básicos 
+% ---
+\usepackage{lmodern}			% Usa a fonte Latin Modern	
+\usepackage[T1]{fontenc}		% Selecao de fontes.
+\usepackage[utf8]{inputenc}		% Codificacao do documento
+\usepackage{lastpage}			% Ficha catalográfica
+\usepackage{indentfirst}		% Indenta o 1 parágrafo.
+\usepackage{color}				% Controle das cores
+\usepackage{graphicx}			% Inclusão de gráficos
+\usepackage{microtype} 			% melhorias de justificação
+\usepackage[]{pdfpages}         %permite colocar pdf no texto
+\usepackage{pdflscape}
+\usepackage{adjustbox}
+\usepackage{multirow}
+
+\newcommand{\quadroname}{Quadro}
+\newcommand{\listofquadrosname}{Lista de quadros}
+
+\newfloat{quadro}{loq}{\quadroname}
+\newlistof{listofquadros}{loq}{\listofquadrosname}
+\newlistentry{quadro}{loq}{0}
+
+% configurações para atender às regras da ABNT
+\setfloatadjustment{quadro}{\centering}
+\counterwithout{quadro}{chapter}
+\renewcommand{\cftquadroname}{\quadroname\space} 
+\renewcommand*{\cftquadroaftersnum}{\hfill--\hfill}
+
+% Configuração de posicionamento padrão:
+\setfloatlocations{quadro}{hbtp}
+
+% Pacote para a definição de novas cores
+\usepackage{xcolor}
+% Definindo novas cores
+\definecolor{verde}{rgb}{0.25,0.5,0.35}
+\definecolor{jpurple}{rgb}{0.5,0,0.35}
+\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
+\usepackage[numberbychapter=false]{listings}
+
+% Altera o nome padrão do rótulo usado no comando \autoref{}
+\renewcommand{\lstlistingname}{Código}
+% Altera o rótulo a ser usando no elemento pré-textual "Lista de código"
+\renewcommand{\lstlistlistingname}{Lista de códigos}
+
+% Configura a ``Lista de Códigos'' conforme as regras da ABNT (para abnTeX2)
+\begingroup\makeatletter
+\let\newcounter\@gobble\let\setcounter\@gobbletwo
+  \globaldefs\@ne \let\c@loldepth\@ne
+  \newlistof{listings}{lol}{\lstlistlistingname}
+  \newlistentry{lstlisting}{lol}{0}
+\endgroup
+
+\renewcommand{\cftlstlistingaftersnum}{\hfill--\hfill}
+
+\let\oldlstlistoflistings\lstlistoflistings
+\renewcommand{\lstlistoflistings}{%
+   \begingroup%
+   \let\oldnumberline\numberline%
+   \renewcommand{\numberline}{\lstlistingname\space\oldnumberline}%
+   \oldlstlistoflistings%
+   \endgroup}
+
+\newcommand{\estiloCodigo}{
+\lstset{
+    language=Java,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{orange},
+    commentstyle=\color{black},
+    morecomment=[s][\color{blue}]{/**}{*/},
+    extendedchars=true,
+    showspaces=false,
+    showstringspaces=false,
+    numbers=none,
+    numberstyle=\tiny,
+    breaklines=true,
+    backgroundcolor=\color{cyan!3},
+    breakautoindent=true,
+    captionpos=b,
+    xleftmargin=0pt,
+    tabsize=1
+}}
+
+
+% ---
+% Pacotes adicionais
+% ---
+\usepackage{lipsum}				% para geração de dummy text
+
+
+
+% ---
+% Pacotes de citações
+% ---
+\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
+\usepackage[alf]{abntex2cite}	% Citações padrão ABNT
+
+% --- 
+% CONFIGURAÇÕES DE PACOTES
+% --- 
+
+% ---
+% Configurações do pacote backref
+% Usado sem a opção hyperpageref de backref
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+% Texto padrão antes do número das páginas
+\renewcommand{\backref}{}
+% Define os textos da citação
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+		Nenhuma citação no texto.%
+	\or
+		Citado na página #2.%
+	\else
+		Citado #1 vezes nas páginas #2.%
+	\fi}%
+% ---
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+\titulo{Título do trabalho}
+\autor{Roberta Santos Vieira}
+\local{Araçuaí -- MG}
+\data{2023}
+\orientador{Prof. Felipe Túlio de Castro}
+\coorientador{Prof. José Lucas Pereira Luiz}
+\instituicao{%
+  Instituto Federal de Educação, Ciência e Tecnologia do Norte de Minas Gerais -- IFNMG
+  \par
+  Tecnologia em Análise e Desenvolvimento de Sistemas
+  \par
+  Campus Araçuaí}
+\tipotrabalho{Monografia (Graduação)}
+
+% O preambulo deve conter o tipo do trabalho, o objetivo, 
+% o nome da instituição e a área de concentração 
+
+%PREAMBULO PARA AS MONOGRAFIAS (TCC II)
+%\preambulo{Monografia apresentada ao curso de Análise e Desenvolvimento de Sistemas do Instituto Federal de Educação, Ciência e Tecnologia do Norte de Minas Gerais, Campus Araçuaí, como parte dos requisitos para obtenção do título de Tecnólogo em Análise e Desenvolvimento de Sistemas.}
+
+%PREAMBULO PARA OS PROJETOS DE PESQUISA (TCC I)
+\preambulo{Projeto de pesquisa apresentado ao curso de Análise e Desenvolvimento de Sistemas do Instituto Federal de Educação, Ciência e Tecnologia do Norte de Minas Gerais, Campus Araçuaí, como parte dos requisitos para aprovação na disciplina de TCC I.}
+% ---
+
+
+% ---
+% Configurações de aparência do PDF final
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+     	%pagebackref=true,
+		pdftitle={\@title}, 
+		pdfauthor={\@author},
+    	pdfsubject={\imprimirpreambulo},
+	    pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={abnt}{latex}{abntex}{abntex2}{trabalho acadêmico}, 
+		colorlinks=true,       		% false: boxed links; true: colored links
+    	linkcolor=black,          	% color of internal links
+    	citecolor=black,        		% color of links to bibliography
+    	filecolor=magenta,      		% color of file links
+		urlcolor=blue,
+		bookmarksdepth=4
+}
+\makeatother
+% --- 
+
+% --- 
+% Espaçamentos entre linhas e parágrafos 
+% --- 
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+% ---
+% compila o indice
+% ---
+\makeindex
+% ---
+
+% ----
+% Início do documento
+% ----
+\begin{document}
+
+% Seleciona o idioma do documento (conforme pacotes do babel)
+%\selectlanguage{english}
+\selectlanguage{brazil}
+
+% Retira espaço extra obsoleto entre as frases.
+\frenchspacing 
+
+% ----------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS
+% ----------------------------------------------------------
+
+% ---
+% Capa
+% ---
+\imprimircapa
+% ---
+
+% ---
+% Folha de rosto (* indica que haverá ficha bibliográfica)
+% ---
+\imprimirfolhaderosto*
+% ---
+
+% ---
+% Ficha Catalográfica
+% ---
+
+% Isto é um exemplo de Ficha Catalográfica, ou ``Dados internacionais de catalogação-na-publicação''. Você pode utilizar este modelo como referência. Porém, provavelmente a biblioteca da sua universidade lhe fornecerá um PDF com a ficha catalográfica definitiva após a defesa do trabalho. Quando estiver com o documento, salve-o como PDF no diretório do seu projeto e substitua todo o conteúdo de implementação deste arquivo pelo comando abaixo:
+
+% \begin{fichacatalografica}
+%     \includepdf{fig_ficha_catalografica.pdf}
+% \end{fichacatalografica}
+
+\include{1_pre_textuais/ficha_catalografica}
+
+% ---
+% Folha de aprovação
+% ---
+
+% Isto é um exemplo de Folha de aprovação, elemento obrigatório da NBR 14724/2011 (seção 4.2.1.3). Você pode utilizar este modelo até a aprovação do trabalho. Após isso, substitua todo o conteúdo deste arquivo por uma imagem da página assinada pela banca com o comando abaixo:
+% \includepdf{folhadeaprovacao_final.pdf}
+\include{1_pre_textuais/folha_aprovacao}
+
+% ---
+% Dedicatória
+% ---
+\include{1_pre_textuais/dedicatoria}
+
+% ---
+% Agradecimentos
+% ---
+\include{1_pre_textuais/agradecimentos}
+
+% ---
+% Epígrafe
+% ---
+\include{1_pre_textuais/epigrafe}
+
+% ---
+% RESUMOS
+% ---
+\setlength{\absparsep}{18pt} % espaço dos parágrafos
+\include{1_pre_textuais/resumo}
+\include{1_pre_textuais/abstract}
+
+% ---
+% Lista de ilustrações
+% ---
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+% ---
+
+% ---
+% Lista de tabelas
+% ---
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+% ---
+
+% ---
+% Lista de quadros
+% ---
+\pdfbookmark[0]{\listofquadrosname}{loq}
+\listofquadros*
+\cleardoublepage
+% ---
+
+% ---
+% Lista de códigos
+% ---
+\pdfbookmark[0]{\lstlistlistingname}{lol}
+\begin{KeepFromToc}
+\lstlistoflistings
+\end{KeepFromToc}
+\cleardoublepage
+% ---
+% Remove o capítulo da lista de códigos
+\counterwithout{lstlisting}{chapter}
+
+% ---
+% Lista de abreviaturas e siglas
+% ---
+\include{1_pre_textuais/siglas}
+
+% ---
+% Lista de símbolos
+% ---
+\include{1_pre_textuais/simbolos}
+
+% ---
+% Sumario
+% ---
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+% ---
+
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+\include{2_textuais/1_introducao}
+
+\include{2_textuais/2_fundamentacao}
+
+\include{2_textuais/3_metodologia}
+
+\include{2_textuais/4_cronograma}
+
+%\include{2_textuais/5_resultados}
+
+%\include{2_textuais/6_conclusao}
+
+% ---
+% Finaliza a parte no bookmark do PDF
+% para que se inicie o bookmark na raiz
+% e adiciona espaço de parte no Sumário
+% ---
+\phantompart
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+% ---
+% Referências bibliográficas
+% ---
+\bibliography{referencias/referencias}
+
+% ---
+% Glossário
+% ---
+%\glossary
+
+% ---
+% Apêndices
+% ---
+\begin{apendicesenv}
+% Imprime uma página indicando o início dos apêndices
+\partapendices
+\include{3_pos_textuais/apendices}
+\end{apendicesenv}
+
+% ---
+% Anexos
+% ---
+\begin{anexosenv}
+% Imprime uma página indicando o início dos anexos
+\partanexos
+\include{3_pos_textuais/anexos}
+\end{anexosenv}
+
+%---
+% INDICE REMISSIVO
+%---
+\phantompart
+\printindex
+
+\end{document}
